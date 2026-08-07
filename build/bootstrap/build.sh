@@ -1,5 +1,8 @@
 #!/bin/bash
 
+# exit if any of the intermediate steps fail
+set -e
+
 # set current working directory to directory of the shell script
 cd "$(dirname "$0")"
 

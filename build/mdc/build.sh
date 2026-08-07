@@ -1,5 +1,8 @@
 #!/bin/bash
 
+# exit if any of the intermediate steps fail
+set -e
+
 # set current working directory to directory of the shell script
 cd "$(dirname "$0")"
 
@@ -12,7 +15,7 @@ npx rollup --config rollup.mjs --input mdc.mjs --file tmp/mdc.js
 npx terser --compress --mangle -- tmp/mdc.js > tmp/mdc.min.js
 
 # mdc.min.css
-npx node-sass --include-path node_modules/ mdc.scss tmp/mdc.css
+npx sass --load-path=node_modules --no-source-map mdc.scss tmp/mdc.css
 npx csso --input tmp/mdc.css --output tmp/mdc.min.css
 
 # copy

@@ -35,6 +35,43 @@ sh prism/build.sh
 sh remark/build.sh
 sh themes/build.sh $browser
 
+# verify that every dependency produced a non-empty artifact
+for file in \
+  themes/github.css \
+  vendor/bootstrap.min.css \
+  vendor/csso.min.js \
+  vendor/markdown-it.min.js \
+  vendor/marked.min.js \
+  vendor/mathjax/tex-mml-chtml.js \
+  vendor/mdc.min.css \
+  vendor/mdc.min.js \
+  vendor/mermaid.min.js \
+  vendor/mithril.min.js \
+  vendor/panzoom.min.js \
+  vendor/prism-autoloader.min.js \
+  vendor/prism-okaidia.min.css \
+  vendor/prism.min.css \
+  vendor/prism.min.js \
+  vendor/remark.min.js
+do
+  if [ ! -s "../$file" ]; then
+    echo "build failed: $file is missing or empty"
+    exit 1
+  fi
+done
+
+for dir in \
+  themes \
+  vendor/mathjax/extensions \
+  vendor/mathjax/fonts \
+  vendor/prism
+do
+  if [ -z "$(ls -A ../$dir 2> /dev/null)" ]; then
+    echo "build failed: $dir is missing or empty"
+    exit 1
+  fi
+done
+
 # copy files
 mkdir -p tmp
 mkdir -p tmp/markdown-viewer

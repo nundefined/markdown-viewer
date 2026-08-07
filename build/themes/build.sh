@@ -1,5 +1,8 @@
 #!/bin/bash
 
+# exit if any of the intermediate steps fail
+set -e
+
 browser=$1
 
 # set current working directory to directory of the shell script
@@ -7,6 +10,8 @@ cd "$(dirname "$0")"
 
 # before
 npm ci 2> /dev/null || npm i
+# leftover from an interrupted run would make the clone fail
+rm -rf cleanrmd/
 git -c https.proxy="" clone --depth 1 --branch v0.1.0 https://github.com/gadenbuie/cleanrmd.git
 mkdir -p ../../themes
 
