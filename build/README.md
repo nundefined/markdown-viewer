@@ -18,6 +18,25 @@ sh build/package.sh
 - git
 - zip
 
+## Prebuilt MDC Stylesheet
+
+`build/mdc/mdc.css` is compiled ahead of time from `build/mdc/mdc.scss` and checked in,
+so the build itself needs no sass toolchain. MDC 0.3x still uses `@import`, global
+builtins and slash division, which sass 2.0 removes -- keeping the compile out of the
+build means a future sass release cannot break packaging.
+
+Regenerate it only after changing `mdc.scss` or the `@material` versions:
+
+```bash
+cd build/mdc/
+npm i
+npx sass --load-path=node_modules --no-source-map mdc.scss mdc.css
+rm -rf node_modules/
+```
+
+The checked-in file is unmodified sass output, so re-running the command above on the
+same inputs reproduces it byte for byte. `build/mdc/build.sh` minifies it with csso.
+
 ## Markdown Viewer Dependencies
 
 | module | version
@@ -29,7 +48,6 @@ sh build/package.sh
 | mermaid             | 10.8.0
 | mithril             | 1.1.7
 | prismjs             | 1.29.0
-| sass                | 1.102.0
 | csso                | 5.0.5
 | @panzoom/panzoom    | 4.5.1
 | **markdown-it**

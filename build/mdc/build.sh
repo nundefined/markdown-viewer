@@ -15,8 +15,11 @@ npx rollup --config rollup.mjs --input mdc.mjs --file tmp/mdc.js
 npx terser --compress --mangle -- tmp/mdc.js > tmp/mdc.min.js
 
 # mdc.min.css
-npx sass --load-path=node_modules --no-source-map mdc.scss tmp/mdc.css
-npx csso --input tmp/mdc.css --output tmp/mdc.min.css
+# mdc.css is checked in, compiled ahead of time from mdc.scss. MDC 0.3x needs a
+# sass 1.x to build and would break on sass 2.0, so the compile is not part of
+# the build. To regenerate it after changing mdc.scss or the @material versions:
+#   npm i && npx sass --load-path=node_modules --no-source-map mdc.scss mdc.css
+npx csso --input mdc.css --output tmp/mdc.min.css
 
 # copy
 cp tmp/mdc.min.* ../../vendor/

@@ -15,7 +15,6 @@
     "@rollup/plugin-node-resolve": "15.0.1",
     "csso-cli": "4.0.2",
     "rollup": "3.29.4",
-    "sass": "1.102.0",
     "terser": "5.30.3"
   },
   "engines": {
