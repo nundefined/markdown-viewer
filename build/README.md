@@ -29,6 +29,7 @@ sh build/package.sh
 | mermaid             | 10.8.0
 | mithril             | 1.1.7
 | prismjs             | 1.29.0
+| sass                | 1.102.0
 | csso                | 5.0.5
 | @panzoom/panzoom    | 4.5.1
 | **markdown-it**
