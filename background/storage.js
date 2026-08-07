@@ -82,10 +82,13 @@ md.storage.bug = (res) => {
   // reload extension bug
   chrome.permissions.getAll((permissions) => {
     var origins = Object.keys(res.origins || {})
-    chrome.permissions.remove({
-      origins: permissions.origins
-        .filter((origin) => origins.indexOf(origin.slice(0, -2)) === -1)
-    })
+    // file:///* is a required host permission and cannot be removed
+    var remove = permissions.origins
+      .filter((origin) => origin !== 'file:///*')
+      .filter((origin) => origins.indexOf(origin.slice(0, -2)) === -1)
+    if (remove.length) {
+      chrome.permissions.remove({origins: remove})
+    }
   })
 }
 
