@@ -45,7 +45,7 @@ same inputs reproduces it byte for byte. `build/mdc/build.sh` minifies it with c
 | cleanrmd            | 0.1.0
 | github-markdown-css | 5.5.1
 | mathjax             | 3.2.2
-| mermaid             | 10.8.0
+| mermaid             | 11.17.0
 | mithril             | 1.1.7
 | prismjs             | 1.29.0
 | csso                | 5.0.5
