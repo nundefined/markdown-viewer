@@ -32,7 +32,7 @@ var mmd = (() => {
         (state._themes[state.theme] === 'auto' && window.matchMedia('(prefers-color-scheme: dark)').matches)
         ? 'dark' : 'default'
       mermaid.initialize({theme, securityLevel: 'loose'})
-      mermaid.init({theme}, 'code.mermaid')
+      mermaid.run({querySelector: 'code.mermaid'})
       loaded = true
 
       var diagrams = Array.from(document.querySelectorAll('code.mermaid'))
