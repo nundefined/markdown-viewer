@@ -14,6 +14,7 @@ importScripts('/background/messages.js')
 importScripts('/background/mathjax.js')
 importScripts('/background/xhr.js')
 importScripts('/background/icon.js')
+importScripts('/background/contextmenu.js')
 
 ;(() => {
   var storage = md.storage(md)
@@ -23,6 +24,7 @@ importScripts('/background/icon.js')
   var mathjax = md.mathjax()
   var xhr = md.xhr()
   var icon = md.icon({storage})
+  var contextmenu = md.contextmenu({storage})
 
   var compilers = Object.keys(md.compilers)
     .reduce((all, compiler) => (
@@ -30,10 +32,15 @@ importScripts('/background/icon.js')
       all
     ), {})
 
-  var messages = md.messages({storage, compilers, mathjax, xhr, webrequest, icon})
+  var messages = md.messages({storage, compilers, mathjax, xhr, webrequest, icon, contextmenu})
 
   chrome.tabs.onUpdated.addListener(detect.tab)
   chrome.runtime.onMessage.addListener(messages)
 
+  chrome.tabs.onUpdated.addListener(contextmenu.tab)
+  chrome.tabs.onActivated.addListener(contextmenu.active)
+  chrome.contextMenus.onClicked.addListener(contextmenu.click)
+
   icon()
+  contextmenu.create()
 })()
