@@ -80,6 +80,13 @@ At runtime `content/index.js` injects `<link href="/themes/<name>.css">` and sta
 
 Three lists must stay in sync when adding or removing a theme: `state._themes` in `content/index.js` (theme → `light`/`dark`/`auto`), `state._themes` in `popup/index.js` (the select options), and the `npx csso` lines in `build/themes/build.sh`.
 
+## Repository and PRs
+
+`origin` is a fork — `nundefined/markdown-viewer`. The upstream project it was forked from is `simov/markdown-viewer`.
+
+- **Upstream is out of scope.** Never open a PR, push a branch, or file an issue against `simov/markdown-viewer`, and never add it as a remote. `gh pr create` defaults to the *parent* repo for forks, so always pass `--repo nundefined/markdown-viewer --base main` explicitly.
+- Every task and every PR targets **`main` on this fork**: branch off it, PR back into it.
+
 ## Conventions
 
 - Match the existing style: `var` (not `let`/`const`), arrow functions, no semicolons, leading-semicolon IIFEs, 2-space indent, LF, trailing whitespace trimmed (see `.editorconfig`).
