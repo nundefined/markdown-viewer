@@ -1,5 +1,5 @@
 
-md.messages = ({storage: {defaults, state, set}, compilers, mathjax, xhr, webrequest, icon}) => {
+md.messages = ({storage: {defaults, state, set}, compilers, mathjax, xhr, webrequest, icon, contextmenu}) => {
 
   return (req, sender, sendResponse) => {
 
@@ -19,6 +19,8 @@ md.messages = ({storage: {defaults, state, set}, compilers, mathjax, xhr, webreq
       }
 
       sendResponse({message: 'html', html})
+
+      contextmenu.mounted(sender.tab)
     }
     else if (req.message === 'autoreload') {
       xhr.get(req.location, (err, body) => {

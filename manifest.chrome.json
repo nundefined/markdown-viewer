@@ -52,7 +52,8 @@
 
   "permissions": [
     "storage",
-    "scripting"
+    "scripting",
+    "contextMenus"
   ],
 
   "host_permissions": [

@@ -71,6 +71,10 @@ chrome.runtime.onMessage.addListener((req, sender, sendResponse) => {
     state.reload.md = true
     m.redraw()
   }
+  else if (req.message === 'toc') {
+    state.content.toc = req.toc
+    m.redraw()
+  }
   else if (req.message === 'autoreload') {
     clearInterval(state.reload.interval)
   }
@@ -79,6 +83,12 @@ chrome.runtime.onMessage.addListener((req, sender, sendResponse) => {
 var oncreate = {
   html: () => {
     update()
+  },
+  toc: (vnode) => {
+    // the initial reveal is done by scroll(), together with the html
+    if ($('#_html') && $('#_html').style.visibility === 'visible') {
+      vnode.dom.style.visibility = 'visible'
+    }
   }
 }
 
@@ -129,9 +139,7 @@ var render = (md) => {
         '<code class="mermaid">'
       )
     }
-    if (state.content.toc) {
-      state.toc = toc.render(state.html)
-    }
+    state.toc = toc.render(state.html)
     state.html = anchors(state.html)
     m.redraw()
   })
@@ -193,8 +201,11 @@ function mount () {
         }
 
         if (state.content.toc) {
-          dom.push(m('#_toc.tex2jax-ignore', m.trust(state.toc)))
+          dom.push(m('#_toc.tex2jax-ignore', {oncreate: oncreate.toc}, m.trust(state.toc)))
           state.raw ? $('body').classList.remove('_toc-left') : $('body').classList.add('_toc-left')
+        }
+        else {
+          $('body').classList.remove('_toc-left')
         }
 
         if (state.theme === 'custom') {

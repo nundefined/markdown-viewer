@@ -44,6 +44,7 @@
       "/background/mathjax.js",
       "/background/xhr.js",
       "/background/icon.js",
+      "/background/contextmenu.js",
 
       "/background/index.js"
     ]
@@ -74,7 +75,8 @@
 
   "permissions": [
     "storage",
-    "scripting"
+    "scripting",
+    "contextMenus"
   ],
 
   "host_permissions": [
