@@ -1,6 +1,15 @@
 
 # Change Log
 
+## v5.4 - 2026-09-04
+- toggle the Table of Contents from the page context menu
+- center mermaid diagrams in the container
+- allow <br> line breaks in mermaid node labels
+- fix mermaid diagrams overflowing in the mini, tacit and kacit themes
+- fix the anchor icon missing in the generated themes
+- fix removing the required file:/// permission on first install
+- update mermaid from v10.8.0 to v11.17.0
+
 ## v5.3 - 2024-04-30
 - custom theme support
 - syntax highlighted raw markdown view
