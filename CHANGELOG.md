@@ -1,6 +1,10 @@
 
 # Change Log
 
+## v5.5 - 2026-10-26
+- view the markdown source of the current tab from the page context menu
+- fix the context menu checkmarks not matching the tab being viewed
+
 ## v5.4 - 2026-09-04
 - toggle the Table of Contents from the page context menu
 - center mermaid diagrams in the container
