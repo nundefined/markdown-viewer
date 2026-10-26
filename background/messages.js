@@ -64,6 +64,7 @@ md.messages = ({storage: {defaults, state, set}, compilers, mathjax, xhr, webreq
     else if (req.message === 'popup.raw') {
       set({raw: req.raw})
       notifyContent({message: 'raw', raw: req.raw})
+      contextmenu.raw(req.raw)
       sendResponse()
     }
     else if (req.message === 'popup.themes') {
