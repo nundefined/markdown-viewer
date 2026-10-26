@@ -1,50 +1,51 @@
 
 md.contextmenu = ({storage: {state, set}}) => {
 
-  var item = 'toc'
-
-  var create = () => {
-    // the item survives service worker restarts, keep the existing one
-    chrome.contextMenus.create({
-      id: item,
-      title: 'Table of Contents',
-      type: 'checkbox',
-      checked: false,
-      contexts: ['page', 'selection', 'link', 'image'],
-      visible: false,
-    }, () => chrome.runtime.lastError)
+  var items = {
+    toc: 'Table of Contents',
+    raw: 'Markdown Source',
   }
 
-  // the viewer sets a global when it mounts
+  var create = () => {
+    // the items survive service worker restarts, keep the existing ones
+    Object.keys(items).forEach((id) => {
+      chrome.contextMenus.create({
+        id,
+        title: items[id],
+        type: 'checkbox',
+        checked: false,
+        contexts: ['page', 'selection', 'link', 'image'],
+        visible: false,
+      }, () => chrome.runtime.lastError)
+    })
+  }
+
+  // the viewer sets a global when it mounts, read back what this tab is showing
+  // other tabs can still show what the settings were when they rendered
   var probe = (id, done) => {
     chrome.scripting.executeScript({
       target: {tabId: id},
-      func: () => !!window.state
+      func: () => window.state ? {toc: state.content.toc, raw: state.raw} : null
     }, (res) => {
-      done(!chrome.runtime.lastError && !!res && res[0].result === true)
+      done(!chrome.runtime.lastError && res && res[0].result || null)
     })
   }
 
   var pending = 0
 
-  var update = (id, retry = 0) => {
+  var update = (id) => {
     var token = ++pending
-    // storage may still be loading, hold on to the request instead of dropping it
-    if (!state.content) {
-      if (retry < 80) {
-        setTimeout(() => token === pending && update(id, retry + 1), 250)
-      }
-      return
-    }
-    probe(id, (visible) => {
+    probe(id, (view) => {
       // the probes are async, only the latest one gets to decide
       if (token !== pending) {
         return
       }
-      chrome.contextMenus.update(item, {
-        visible,
-        checked: state.content.toc,
-      }, () => chrome.runtime.lastError)
+      Object.keys(items).forEach((item) => {
+        chrome.contextMenus.update(item, {
+          visible: !!view,
+          checked: !!(view && view[item]),
+        }, () => chrome.runtime.lastError)
+      })
     })
   }
 
@@ -67,14 +68,23 @@ md.contextmenu = ({storage: {state, set}}) => {
   }
 
   var click = (info, tab) => {
-    if (info.menuItemId !== item || !state.content) {
-      return
+    if (info.menuItemId === 'toc' && state.content) {
+      state.content.toc = info.checked
+      set({content: state.content})
+      chrome.tabs.sendMessage(tab.id, {message: 'toc', toc: info.checked},
+        () => chrome.runtime.lastError)
     }
-    state.content.toc = info.checked
-    set({content: state.content})
-    chrome.tabs.sendMessage(tab.id, {message: 'toc', toc: info.checked},
-      () => chrome.runtime.lastError)
+    // this tab only, the stored setting belongs to the popup button
+    else if (info.menuItemId === 'raw') {
+      chrome.tabs.sendMessage(tab.id, {message: 'raw', raw: info.checked},
+        () => chrome.runtime.lastError)
+    }
   }
 
-  return {create, active, tab, mounted, click}
+  // the popup button flips the active tab without reloading it
+  var raw = (checked) => {
+    chrome.contextMenus.update('raw', {checked}, () => chrome.runtime.lastError)
+  }
+
+  return {create, active, tab, mounted, click, raw}
 }
